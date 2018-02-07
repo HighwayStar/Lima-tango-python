@@ -163,17 +163,17 @@ class Andor(PyTango.Device_4Impl):
             _AndorInterface.setShutterLevel(self.__ShutterLevel[self.shutter_level])
 
 
-        if self.__FanMode.has_key('UNSUPPORTED') and self.fan_mode:
+        if 'UNSUPPORTED' in self.__FanMode and self.fan_mode:
             deb.Error('Cannot set fan_mode property, not supported for this camera model')
         elif self.fan_mode:
                 _AndorInterface.setFanMode(self.__FanMode[self.fan_mode])
 
-        if self.__HighCapacity.has_key('UNSUPPORTED') and self.high_capacity:
+        if 'UNSUPPORTED' in self.__HighCapacity and self.high_capacity:
             deb.Error('Cannot set high_capacity property, not supported for this camera model')
         elif self.high_capacity:
                 _AndorInterface.setHighCapacity(self.__HighCapacity[self.high_capacity])
 
-        if self.__BaselineClamp.has_key('UNSUPPORTED') and self.baseline_clamp:
+        if 'UNSUPPORTED' in self.__BaselineClamp and self.baseline_clamp:
             deb.Error('Cannot set baseline_clamp propery, not supported for this camera model')
         elif self.baseline_clamp:
             _AndorInterface.setBaselineClamp(self.__BaselineClamp[self.baseline_clamp])
@@ -423,10 +423,10 @@ def get_control(config_path='/usr/local/etc/andor', camera_number = '0',**keys) 
     global _AndorCamera
     global _AndorInterface
     if _AndorCamera is None:
-        print '\n\nStarting and configuring the Andor camera ...'
+        print('\n\nStarting and configuring the Andor camera ...')
         _AndorCamera = AndorAcq.Camera(config_path, int(camera_number))
         _AndorInterface = AndorAcq.Interface(_AndorCamera)
-        print '\n\nAndor Camera #%s (%s:%s) is started'%(camera_number,_AndorCamera.getDetectorType(),_AndorCamera.getDetectorModel())
+        print('\n\nAndor Camera #%s (%s:%s) is started'%(camera_number,_AndorCamera.getDetectorType(),_AndorCamera.getDetectorModel()))
     return Core.CtControl(_AndorInterface)
 
     

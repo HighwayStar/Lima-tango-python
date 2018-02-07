@@ -172,7 +172,7 @@ def get_control(frame_transmission_delay = 0, inter_packet_delay = 0,
         util = PyTango.Util.instance()
         camera_id = 'uname://' + util.get_ds_inst_name()
 
-    print "basler camera_id:", camera_id
+    print("basler camera_id:", camera_id)
 
     if _BaslerCam is None:
         _BaslerCam = BaslerAcq.Camera(camera_id, int(packet_size))

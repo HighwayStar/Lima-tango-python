@@ -553,7 +553,7 @@ def get_control(espia_dev_nb_m1 = '0', espia_dev_nb_m2='0',
             _MetaInterface.addInterface(0,0, _MaxipixInterfaceM1)
             _MetaInterface.addInterface(0,1, _MaxipixInterfaceM2)
         else:
-            raise Exception, "Invalid value for property meta_config: "+meta_config
+            raise Exception("Invalid value for property meta_config: "+meta_config)
 
     return Core.CtControl(_MetaInterface)
 

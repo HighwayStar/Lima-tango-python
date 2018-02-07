@@ -32,7 +32,7 @@ from Lima import Core
 from Lima import Simulator as SimuMod
 
 def grouper(n, iterable, padvalue=None):
-    return itertools.izip(*[itertools.chain(iterable, itertools.repeat(padvalue, n-1))]*n)
+    return zip(*[itertools.chain(iterable, itertools.repeat(padvalue, n-1))]*n)
 
 
 class Simulator(PyTango.Device_4Impl):
@@ -80,7 +80,7 @@ class Simulator(PyTango.Device_4Impl):
 
     @staticmethod
     def getGaussPeaksFromFloatArray(peak_list_flat):
-        peak_list = grouper(4, map(float, peak_list_flat))
+        peak_list = grouper(4, list(map(float, peak_list_flat)))
         gauss_peaks = [SimuMod.GaussPeak(*p) for p in peak_list]
         return gauss_peaks
 
@@ -88,7 +88,7 @@ class Simulator(PyTango.Device_4Impl):
         gauss_peaks = _SimuFrameBuilder.getPeaks()
         peak_list = [(p.x0, p.y0, p.fwhm, p.max) for p in gauss_peaks]
         peak_list_flat = list(itertools.chain(*peak_list))
-        attr.set_value(map(float, peak_list_flat))
+        attr.set_value(list(map(float, peak_list_flat)))
 
     def write_peaks(self,attr) :
         peak_list_flat = attr.get_write_value()
@@ -101,7 +101,7 @@ class Simulator(PyTango.Device_4Impl):
 
     def write_peak_angles(self,attr) :
         peak_angle_list = attr.get_write_value()
-        _SimuFrameBuilder.setPeakAngles(map(float, peak_angle_list))
+        _SimuFrameBuilder.setPeakAngles(list(map(float, peak_angle_list)))
 
     def read_diffraction_pos(self,attr) :
         x, y = _SimuFrameBuilder.getDiffractionPos()
@@ -207,14 +207,14 @@ def get_control(peaks=[], peak_angles=[], **keys) :
                 type(peaks[0]) == str):
                 peaks = ','.join(peaks)
             if type(peaks) == str:
-                peaks = map(float, peaks.split(','))
+                peaks = list(map(float, peaks.split(',')))
             gauss_peaks = Simulator.getGaussPeaksFromFloatArray(peaks)
             _SimuFrameBuilder.setPeaks(gauss_peaks)
         if peak_angles:
             if type(peak_angles) == str:
                 peak_angles = peak_angles.split(',')
             if type(peak_angles[0]) == str:
-                peak_angles = map(float, peak_angles)
+                peak_angles = list(map(float, peak_angles))
             _SimuFrameBuilder.setPeakAngles(peak_angles)
 
     return Core.CtControl(_SimuInterface)

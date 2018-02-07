@@ -107,15 +107,15 @@ class SlsDetector(PyTango.Device_4Impl):
         self.__ReadoutFlags = ConstListAttr(nl, vl)
 
         nl = ['PixelDepth4', 'PixelDepth8', 'PixelDepth16', 'PixelDepth32']
-        bdl = map(lambda x: getattr(self.cam, x), nl)
+        bdl = [getattr(self.cam, x) for x in nl]
         self.__PixelDepth = OrderedDict([(str(bd), int(bd)) for bd in bdl])
 
     def init_dac_adc_attr(self):
         nb_modules = self.cam.getNbDetSubModules()
         name_list, idx_list, milli_volt_list = self.model.getDACInfo()
-        attr_name_list = map(lambda n: 'dac_' + n, name_list)
-        data_list = zip(idx_list, milli_volt_list)
-        self.dac_attr_idx_list = zip(attr_name_list, data_list)
+        attr_name_list = ['dac_' + n for n in name_list]
+        data_list = list(zip(idx_list, milli_volt_list))
+        self.dac_attr_idx_list = list(zip(attr_name_list, data_list))
         for name, data in self.dac_attr_idx_list:
             attr_data_dict = {
                 'name': name, 
@@ -135,9 +135,9 @@ class SlsDetector(PyTango.Device_4Impl):
                 self.add_attribute(attr_data)
 
         name_list, idx_list, factor_list, min_val_list = self.model.getADCInfo()
-        attr_name_list = map(lambda n: 'adc_' + n, name_list)
-        data_list = zip(idx_list, factor_list, min_val_list)
-        self.adc_attr_idx_list = zip(attr_name_list, data_list)
+        attr_name_list = ['adc_' + n for n in name_list]
+        data_list = list(zip(idx_list, factor_list, min_val_list))
+        self.adc_attr_idx_list = list(zip(attr_name_list, data_list))
         for name, data in self.adc_attr_idx_list:
             attr_data_dict = {
                 'name': name, 
@@ -234,7 +234,7 @@ class SlsDetector(PyTango.Device_4Impl):
         elif nb_val == 1:
             mod_idx_list = [-1]
         elif nb_val == self.cam.getNbDetSubModules():
-            mod_idx_list = range(nb_val)
+            mod_idx_list = list(range(nb_val))
         else:
             msg = 'Invalid %s length: %s' % (att_name, val_list)
         if msg:

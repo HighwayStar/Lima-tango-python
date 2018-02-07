@@ -790,10 +790,10 @@ def get_control(HostName="160.103.146.190", TcpPort=1031, Simulate=False, **keys
     global _Mythen3Interface
 #    Core.DebParams.setTypeFlags(Core.DebParams.AllFlags)
     if _Mythen3Interface is None:
-        print 'Starting and configuring the Mythen3 camera ...'
+        print('Starting and configuring the Mythen3 camera ...')
         _Mythen3Camera = Mythen3Acq.Camera(HostName, int(TcpPort), bool(int(Simulate)))
         _Mythen3Interface = Mythen3Acq.Interface(_Mythen3Camera)
-        print 'Mythen3 Camera (%s:%s) is started' % (_Mythen3Camera.getDetectorType(), _Mythen3Camera.getDetectorModel())
+        print('Mythen3 Camera (%s:%s) is started' % (_Mythen3Camera.getDetectorType(), _Mythen3Camera.getDetectorModel()))
     return Core.CtControl(_Mythen3Interface)
 
 def get_tango_specific_class_n_device():

@@ -22,7 +22,7 @@
 import PyTango
 
 from Lima import Core
-from Utils import getDataFromFile,BasePostProcess
+from .Utils import getDataFromFile,BasePostProcess
 from Lima.Server import AttrHelper
 
 class MaskDeviceServer(BasePostProcess) :

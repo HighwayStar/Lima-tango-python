@@ -27,11 +27,11 @@ import sys
 import numpy
 import processlib
 from Lima import Core
-from Utils import getDataFromFile,BasePostProcess
+from .Utils import getDataFromFile,BasePostProcess
 from Lima.Server import AttrHelper
 
 def grouper(n, iterable, padvalue=None):
-    return itertools.izip(*[itertools.chain(iterable, itertools.repeat(padvalue, n-1))]*n)
+    return zip(*[itertools.chain(iterable, itertools.repeat(padvalue, n-1))]*n)
 
 computing_modes_list = ["MAXIMUM", "CM"]
 

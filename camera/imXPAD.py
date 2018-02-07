@@ -77,9 +77,9 @@ class imXPAD(PyTango.Device_4Impl):
             self.set_state(PyTango.DevState.ON)
             self.get_device_properties(self.get_device_class())
         
-        except Exception, e:
-            print "Error in init_device Method"
-            print e
+        except Exception as e:
+            print("Error in init_device Method")
+            print(e)
             
         #Dictionaries with the Types. 
         self.__AcquisitionMode = {'Standard':XpadAcq.Camera.XpadAcquisitionMode.Standard,
@@ -149,7 +149,7 @@ class imXPAD(PyTango.Device_4Impl):
     @Core.DEB_MEMBER_FUNCT
     def saveConfig(self,config_prefix) :
         config_path = self.config_path
-        print 'saveConfig',config_path,config_prefix
+        print('saveConfig',config_path,config_prefix)
         _imXPADCam.saveConfigGToFile(os.path.join(config_path,'%s.cfg' % config_prefix))
         _imXPADCam.saveConfigLToFile(os.path.join(config_path,'%s.cfl' % config_prefix))
         self._config_name = config_prefix
@@ -193,19 +193,19 @@ class imXPAD(PyTango.Device_4Impl):
 #==================================================================
 
     def calibrationOTNPulse(self, attr):
-        print ("OTNpulseCalibration in %s", attr)
+        print(("OTNpulseCalibration in %s", attr))
         _imXPADCam.calibrationOTNPulse(attr)
         self._config_name = None
         self._ITHL_offset = 0
 
     def calibrationOTN(self,attr):
-        print ("OTNcalibration in %s", attr)
+        print(("OTNcalibration in %s", attr))
         _imXPADCam.calibrationOTN(attr)
         self._config_name = None
         self._ITHL_offset = 0
 
     def calibrationBEAM(self, values):
-        print ("BeamCalibration in %s", values)
+        print(("BeamCalibration in %s", values))
         time = int(values[0])
         ITHLmax = int(values[1])
         calibConfig = int(values[2])
@@ -232,8 +232,8 @@ class imXPAD(PyTango.Device_4Impl):
         print ("Get module mask")
         try:
             val= _imXPADCam.getModuleMask()
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
             raise e
         return val
     
@@ -245,39 +245,39 @@ class imXPAD(PyTango.Device_4Impl):
         _imXPADCam.resetModules()
         
     def saveConfigLToFile(self,config_prefix) :
-        print ("saveConfigLToFile in %s", config_prefix)
+        print(("saveConfigLToFile in %s", config_prefix))
         config_path = self.config_path
         full_path = os.path.join(config_path,'%s.cfl' % config_prefix)
         _imXPADCam.saveConfigLToFile(full_path)  
         
     def loadConfigLFromFile(self,config_prefix) :
-        print ("loadConfigLFromFile in %s", config_prefix)
+        print(("loadConfigLFromFile in %s", config_prefix))
         config_path = self.config_path
         full_path = os.path.join(config_path,'%s.cfl' % config_prefix)
         _imXPADCam.loadConfigLFromFile(full_path)
     
     def saveConfigGToFile(self,config_prefix) :
-        print ("saveConfigGToFile in %s", config_prefix)
+        print(("saveConfigGToFile in %s", config_prefix))
         config_path = self.config_path
         full_path = os.path.join(config_path,'%s.cfg' % config_prefix)
         _imXPADCam.saveConfigGToFile(full_path)
         
     def loadConfigGFromFile(self,config_prefix) :
-        print ("loadConfigGFromFile %s", config_prefix)
+        print(("loadConfigGFromFile %s", config_prefix))
         config_path = self.config_path
         full_path = os.path.join(config_path,'%s.cfg' % config_prefix)
         _imXPADCam.loadConfigGFromFile(full_path)
         
     def loadConfigG(self, config):
-        print ("loadConfigG in %s", config)
-        reg = long(config[0])
-        value = long(config[1])
+        print(("loadConfigG in %s", config))
+        reg = int(config[0])
+        value = int(config[1])
         val = _imXPADCam.loadConfigG(reg, value)
         return val
     
     def readConfigG (self, config):
-        print ("readConfigG in %s", config)
-        reg = long(config)
+        print(("readConfigG in %s", config))
+        reg = int(config)
 #    value = long(config[1])
         val = _imXPADCam.readConfigG(reg)
         return val
@@ -285,7 +285,7 @@ class imXPAD(PyTango.Device_4Impl):
     def getUSBDeviceList(self):
         print ("getUSBDeviceList in")
         val = _imXPADCam.getUSBDeviceList()
-        print val
+        print(val)
         return val
 
     def xpadInit(self):
@@ -293,8 +293,8 @@ class imXPAD(PyTango.Device_4Impl):
         _imXPADCam.xpadInit()
       
     def setUSBDevice(self, module):
-        print ("setUSBDevice in %s", module)
-        val =long(module)
+        print(("setUSBDevice in %s", module))
+        val =int(module)
         _imXPADCam.setUSBDevice(val)
 
     def defineDetectorModel(self, model):
@@ -504,11 +504,11 @@ _imXPADCam = None
 _imXPADInterface = None
 
 def get_control(cam_ip_address = "localhost",port=3456,**keys) :
-    print cam_ip_address,port
+    print(cam_ip_address,port)
     global _imXPADCam
     global _imXPADInterface
     port = int(port)
-    print "Getting control for IMXPAD: %s / %s" % (cam_ip_address, port)
+    print("Getting control for IMXPAD: %s / %s" % (cam_ip_address, port))
     if _imXPADCam is None:
         _imXPADCam = XpadAcq.Camera(cam_ip_address,port)
         _imXPADInterface = XpadAcq.Interface(_imXPADCam)

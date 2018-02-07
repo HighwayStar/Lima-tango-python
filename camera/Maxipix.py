@@ -156,7 +156,7 @@ class Maxipix(PyTango.Device_4Impl):
                     modifiedTime = fileStat.st_mtime
                     fileDict[modifiedTime]= file.strip('.cfg')
         if fileDict:
-            timeList = fileDict.keys();timeList.sort()
+            timeList = list(fileDict.keys());timeList.sort()
             for mTime in timeList:
                 fileList.append(fileDict[mTime])
                 #fileList.append(time.ctime(mTime))

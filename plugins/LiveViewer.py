@@ -119,7 +119,7 @@ class LiveViewer (PyTango.Device_4Impl):
         try:
             self.interface.setFrameRate(self.attr_Frame_Rate)
         except:
-            print "Warning: setFrameRate() not supported"
+            print("Warning: setFrameRate() not supported")
 
         if self.AcquisitionAutoStart:
             self.control.prepareAcq()

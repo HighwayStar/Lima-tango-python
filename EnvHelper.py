@@ -30,6 +30,7 @@ import logging
 import functools
 
 import PyTango
+import collections
 
 ModDepend = ['Core', 'Espia']
 Debug = 0
@@ -40,7 +41,7 @@ EnvVersionDepth = {'MAJOR': 1, 'MINOR': 2, 'FULL': 3}
 def get_sub_devices(server=None, cache=True):
     result = {}
     devices = get_device_class_map(server=server, cache=cache)
-    for class_name, devices in devices.items():
+    for class_name, devices in list(devices.items()):
         result[class_name] = devices[0]
     return result
 
@@ -164,7 +165,7 @@ def setup_lima_env(argv):
         print_debug('Found %s import in %s' % (pname, cfile_name))
         if pname not in ['Core']:
             setup_env(pname)
-    for k, v in os.environ.items():
+    for k, v in list(os.environ.items()):
         if 'LIMA_' in k and '_VERSION' in k and \
                k not in ['LIMA_LINK_STRICT_VERSION']:
             print_debug('Env: %s=%s' % (k, v))
@@ -210,15 +211,15 @@ def setup_env(mod):
             ver = 'v' + ver
         filt_vers = [set_env_version_depth(x) for x in all_vers]
         if ver not in filt_vers:
-            print 'Warning: could not find %s=%s' % (env_var_name, ver)
+            print('Warning: could not find %s=%s' % (env_var_name, ver))
             return
     else:
         ver = all_vers[-1]
         os.environ[env_var_name] = set_env_version_depth(ver[1:])
-    for full_ver, deps in pvers.items():
+    for full_ver, deps in list(pvers.items()):
         if set_env_version_depth(full_ver) == set_env_version_depth(ver):
             break
-    for dname, dver in deps.items():
+    for dname, dver in list(deps.items()):
         env_var_name = 'LIMA_%s_VERSION' % dname.upper()
         os.environ[env_var_name] = set_env_version_depth(dver)
         if dname != 'Core':
@@ -264,14 +265,14 @@ def check_lima_dir():
     return LimaDir
 
 def version_code(s):
-    return map(int, s.strip('v').split('.'))
+    return list(map(int, s.strip('v').split('.')))
 
 def version_cmp(x, y):
     return cmp(version_code(x), version_code(y))
 
 def print_debug(msg):
     if Debug:
-        print msg
+        print(msg)
 
 def __get_ct_classes():
     import Lima.Core
@@ -347,7 +348,7 @@ def to_tango_object(ct, name_id):
         _fget = getattr(ct_klass, member_name)
 
         # skip non callables
-        if not callable(_fget):
+        if not isinstance(_fget, collections.Callable):
             continue
 
         name = member_name[3:]
@@ -367,7 +368,7 @@ def to_tango_object(ct, name_id):
                       ct_klass.__name__, name_lower_us)
         patched_members[name_lower_us] = fget, fset
 
-    keys = patched_members.keys()
+    keys = list(patched_members.keys())
 
     class klass(object):
 
@@ -396,7 +397,7 @@ def to_tango_object(ct, name_id):
     klass.__name__ = ct_klass_name
     ct_tango_map[ct_klass] = klass
     kl = klass(ct, name_id)
-    for name, value in patched_members.items():
+    for name, value in list(patched_members.items()):
         setattr(kl, name, property(*value))
     return kl
 
@@ -429,20 +430,22 @@ def create_tango_objects(ct_control, name_template):
 
         # patch tango_ct_control
         getter = functools.partial(lambda obj, ct: ct, tango_ct)
-        getter = types.MethodType(getter, tango_ct, tango_ct.__class__)
+        getter = types.MethodType(getter, tango_ct)
         setattr(tango_ct_control, ct_func_name, getter)
 
+        print("Tango_ct", tango_ct)
+        print("Tango_ct_name", tango_ct_name)
+        print("ct_name", ct_name)
         tango_object = server.register_object(tango_ct, tango_ct_name, ct_name,
                                               member_filter=__filter)
 
         tango_ct_map[tango_ct_name] = tango_ct, tango_object
 
-        print("ctcontrol.{0}() = {1}".format(ct_func_name, getattr(tango_ct_control, ct_func_name)()))
+        print(("ctcontrol.{0}() = {1}".format(ct_func_name, getattr(tango_ct_control, ct_func_name)())))
 
     tango_object = server.register_object(tango_ct_control,
                                           tango_ct_control_name,
-                                          tango_ct_control_class_name,
-                                          member_filter=__filter)
+                                          tango_ct_control_class_name)
     tango_ct_map[tango_ct_control_name] = tango_ct_control, tango_object
 
     return server, tango_ct_map

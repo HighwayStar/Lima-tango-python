@@ -27,10 +27,10 @@ import sys
 import numpy
 import processlib
 from Lima import Core
-from Utils import getDataFromFile,BasePostProcess
+from .Utils import getDataFromFile,BasePostProcess
 
 def grouper(n, iterable, padvalue=None):
-    return itertools.izip(*[itertools.chain(iterable, itertools.repeat(padvalue, n-1))]*n)
+    return zip(*[itertools.chain(iterable, itertools.repeat(padvalue, n-1))]*n)
 
 Roi2SpectrumTask = Core.Processlib.Tasks.Roi2SpectrumTask
 
@@ -106,7 +106,7 @@ class Roi2spectrumDeviceServer(BasePostProcess) :
     def addNames(self,argin):
         roi_id = []
         for roi_name in argin:
-            if not self.__roiName2ID.has_key(roi_name):
+            if roi_name not in self.__roiName2ID:
                 self.__roiName2ID[roi_name] = self.__currentRoiId
                 self.__roiID2Name[self.__currentRoiId] = roi_name
                 roi_id.append(self.__currentRoiId)

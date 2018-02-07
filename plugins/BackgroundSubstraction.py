@@ -23,7 +23,7 @@ import os
 import PyTango
 
 from Lima import Core
-from Utils import getDataFromFile,BasePostProcess
+from .Utils import getDataFromFile,BasePostProcess
 
 class BackgroundSubstractionDeviceServer(BasePostProcess) :
     BACKGROUND_TASK_NAME = 'BackGroundTask'

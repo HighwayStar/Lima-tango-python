@@ -367,10 +367,10 @@ def get_control(config_path='/users/blissadm/local/Andor3/andor/bitflow', camera
     global _Andor3Camera
     global _Andor3Interface
     if _Andor3Camera is None:
-        print '\n\nStarting and configuring the Andor3 camera ...'
+        print('\n\nStarting and configuring the Andor3 camera ...')
         _Andor3Camera = Andor3Acq.Camera(config_path, int(camera_number))
         _Andor3Interface = Andor3Acq.Interface(_Andor3Camera)
-        print '\n\nAndor3 Camera #%s (%s:%s) is started'%(camera_number,_Andor3Camera.getDetectorType(),_Andor3Camera.getDetectorModel())
+        print('\n\nAndor3 Camera #%s (%s:%s) is started'%(camera_number,_Andor3Camera.getDetectorType(),_Andor3Camera.getDetectorModel()))
     return Core.CtControl(_Andor3Interface)
 
     

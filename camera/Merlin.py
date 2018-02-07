@@ -852,10 +852,10 @@ def get_control(HostName="", CmdPort=6431, DataPort=6432, ImageWidth=512, ImageH
     global _MerlinInterface
 #    Core.DebParams.setTypeFlags(Core.DebParams.AllFlags)
     if _MerlinInterface is None:
-        print 'Starting and configuring the Merlin camera ...'
+        print('Starting and configuring the Merlin camera ...')
         _MerlinCamera = MerlinAcq.Camera(HostName, int(CmdPort), int(DataPort), int(ImageWidth), int(ImageHeight), int(Chips), bool(Simulate))
         _MerlinInterface = MerlinAcq.Interface(_MerlinCamera)
-        print 'Merlin Camera (%s:%s) is started'%(_MerlinCamera.getDetectorType(),_MerlinCamera.getDetectorModel())
+        print('Merlin Camera (%s:%s) is started'%(_MerlinCamera.getDetectorType(),_MerlinCamera.getDetectorModel()))
     return Core.CtControl(_MerlinInterface)
 
 def get_tango_specific_class_n_device():

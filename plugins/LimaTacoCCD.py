@@ -148,7 +148,7 @@ class LimaTacoCCDs(PyTango.Device_4Impl, object):
                 taco_dict = LimaTacoCCDs.TacoSpecificDict
                 if name_cont[0] in taco_dict:
                     cmd_list, proxy_cont = taco_dict[name_cont[0]]
-                    LimaTacoCCDs.TacoCmdList = cmd_list.keys()
+                    LimaTacoCCDs.TacoCmdList = list(cmd_list.keys())
                     LimaTacoCCDs.TacoProxy = proxy = proxy_cont[0]
                     try:
                         auto_reset = proxy.getAutoResetCtStatus()
@@ -241,7 +241,7 @@ class LimaTacoCCDs(PyTango.Device_4Impl, object):
             msg = msg[:end] + '>'
             if self.AutoResetCtStatus:
                 control.resetStatus(True)
-            raise Core.Exception, msg
+            raise Core.Exception(msg)
         deb.Return('TACO state: 0x%08x (%d)' % (taco_state, taco_state))
         return taco_state
 
@@ -304,7 +304,7 @@ class LimaTacoCCDs(PyTango.Device_4Impl, object):
         if release:
             release()
         if self._data_cache.shape[0] != frame_size:
-            raise Core.Exception, ('Client expects %d bytes, frame has %d' % 
+            raise Core.Exception('Client expects %d bytes, frame has %d' % 
                                    (frame_size, self._data_cache.shape[0]))
         return self._data_cache
 
@@ -379,7 +379,7 @@ class LimaTacoCCDs(PyTango.Device_4Impl, object):
         if len(data_header) != header_len:
             msg = ('Invalid DevEncoded DATA_ARRAY len: %d (expected %d)' %
                    (len(data_header), header_len))
-            raise Core.Exception, msg
+            raise Core.Exception(msg)
         concat_frames = control.ReadImage(0, nb_frames)
         self._concat_data_cache = data_header + concat_frames.buffer.tostring()
         da_len = len(self._concat_data_cache) - header_len
@@ -387,7 +387,7 @@ class LimaTacoCCDs(PyTango.Device_4Impl, object):
         if release:
             release()
         if da_len != frame_size:
-            raise Core.Exception, ('Client expects %d bytes, frame has %d' % 
+            raise Core.Exception('Client expects %d bytes, frame has %d' % 
                                    (frame_size, da_len))
         return ('DATA_ARRAY',  self._concat_data_cache)
     
@@ -558,7 +558,7 @@ class LimaTacoCCDs(PyTango.Device_4Impl, object):
         index_format = '%04d'
         arr = [pars.directory, pars.prefix, pars.suffix, pars.nextNumber,
                index_format, over_str]
-        par_arr = map(str, arr)
+        par_arr = list(map(str, arr))
         deb.Return('File pars: %s' % par_arr)
         return par_arr
 
@@ -780,7 +780,7 @@ class LimaTacoCCDs(PyTango.Device_4Impl, object):
         else:
             err_msg = ('Invalid acq. mode: stripe_concat=%s, frame_accum=%s' %
                        (stripe_concat, frame_accum))
-            raise Core.Exception,err_msg
+            raise Core.Exception(err_msg)
         control = _control_ref()
         acq = control.acquisition()
         acq.setAcqMode(acq_mode)
@@ -907,7 +907,7 @@ class LimaTacoCCDs(PyTango.Device_4Impl, object):
         elif argin == 4:
             triggerMode = Core.ExtTrigReadout
         else:
-            raise Core.Exception,'Invalid ext. trig: %s' % argin
+            raise Core.Exception('Invalid ext. trig: %s' % argin)
 
         acquisition.setTriggerMode(triggerMode)
         
@@ -933,7 +933,7 @@ class LimaTacoCCDs(PyTango.Device_4Impl, object):
         elif triggerMode == Core.ExtTrigReadout:
             returnValue = 4
         else:
-            raise Core.Exception, 'Invalid trigger mode: %s' % triggerMode
+            raise Core.Exception('Invalid trigger mode: %s' % triggerMode)
         return returnValue
 #------------------------------------------------------------------
 #    DevReadValues command:
@@ -951,7 +951,7 @@ class LimaTacoCCDs(PyTango.Device_4Impl, object):
             release()
         bpm_pars = self.__bpm_mgr.getResult(1)
         if bpm_pars.errorCode != self.__bpm_mgr.OK:
-            raise Core.Exception,'Error calculating beam params: %d' % bpm_pars.errorCode
+            raise Core.Exception('Error calculating beam params: %d' % bpm_pars.errorCode)
 
         nr_spots = 1
         auto_cal = -1
@@ -1099,7 +1099,7 @@ class LimaTacoCCDs(PyTango.Device_4Impl, object):
 #------------------------------------------------------------------
     @Core.DEB_MEMBER_FUNCT
     def dummy(self, *args) :
-        raise Core.Exception, 'Taco command not supported for this camera'
+        raise Core.Exception('Taco command not supported for this camera')
 
 #==================================================================
 #
@@ -1258,10 +1258,10 @@ def get_tango_specific_class_n_device() :
 def set_taco_specific_dict_n_name_cont(taco_dict, name_cont):
     LimaTacoCCDs.TacoSpecificDict = taco_dict
     LimaTacoCCDs.TacoSpecificName = name_cont
-    for cmd_list, proxy_cont in taco_dict.values():
+    for cmd_list, proxy_cont in list(taco_dict.values()):
         LimaTacoCCDsClass.cmd_list.update(cmd_list)
         proxy_class = proxy_cont[0].__class__
-        for cmd in cmd_list.keys():
+        for cmd in list(cmd_list.keys()):
             try:
                 getattr(LimaTacoCCDs, cmd)
             except:

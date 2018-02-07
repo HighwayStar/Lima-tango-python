@@ -59,7 +59,7 @@ class Frelon(PyTango.Device_4Impl):
         self.__ImageMode = {'FRAME TRANSFER': FrelonAcq.FTM,
                             'FULL FRAME': FrelonAcq.FFM}
 
-        self.__RoiMode = {'NONE' : FrelonAcq.None,
+        self.__RoiMode = {'NONE' : FrelonAcq.Nane,
                           'SLOW' : FrelonAcq.Slow,
                           'FAST' : FrelonAcq.Fast,
                           'KINETIC' : FrelonAcq.Kinetic}
@@ -290,7 +290,7 @@ class FrelonTacoProxy:
     
     @Core.DEB_MEMBER_FUNCT
     def DevCcdSetHwPar(self, hw_par_str):
-        hw_par = map(int, string.split(hw_par_str))
+        hw_par = list(map(int, string.split(hw_par_str)))
         deb.Param('Setting hw par: %s' % hw_par)
         kin_win_size, kin_line_beg, kin_stripes = self.getKinPars()
         flip_mode, kin_line_beg, kin_stripes, d0, roi_mode_int = hw_par
@@ -330,7 +330,7 @@ class FrelonTacoProxy:
         elif kinetics == 3:
             ftm = FrelonAcq.FTM
         else:
-            raise Core.Exception, 'Invalid profile value: %s' % kinetics
+            raise Core.Exception('Invalid profile value: %s' % kinetics)
         _FrelonAcq.setFrameTransferMode(ftm)
         
     @Core.DEB_MEMBER_FUNCT
@@ -367,7 +367,7 @@ class FrelonTacoProxy:
         if kin_win_size % bin.getY() != 0:
             msg = 'Invalid kinetics window size (%d): ' % kin_win_size + \
                   'must be multiple of vert. bin (%d)' % bin.getY()
-            raise Core.Exception, msg
+            raise Core.Exception(msg)
 
         roi = _FrelonAcq.getRoi()
         roi = roi.getUnbinned(bin)

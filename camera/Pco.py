@@ -595,16 +595,16 @@ def get_control(debug_control = "0",
         # <class 'PyTango._PyTango.StdStringVector'>
         paramsIn = "".join("%s;" % (x,) for x in params)
 
-    print "============= Properties ============="
-    print "         keys:", keys
-    print "       params:", params
-    print "     paramsIn:", paramsIn
-    print "%s [%s] [0x%x]" % ("debug_control:", debug_control, debControl)
-    print "%s [%s] [0x%x]" % (" debug_module:", debug_module, debModule)
-    print "%s [%s] [0x%x]" % (" debug_format:", debug_format, debFormat)
-    print "%s [%s] [0x%x]" % ("   debug_type:", debug_type, debType)
-    print "%s [%s] [0x%x]" % ("   mem_factor:", mem_factor, memFactor)
-    print "======================================"
+    print("============= Properties =============")
+    print("         keys:", keys)
+    print("       params:", params)
+    print("     paramsIn:", paramsIn)
+    print("%s [%s] [0x%x]" % ("debug_control:", debug_control, debControl))
+    print("%s [%s] [0x%x]" % (" debug_module:", debug_module, debModule))
+    print("%s [%s] [0x%x]" % (" debug_format:", debug_format, debFormat))
+    print("%s [%s] [0x%x]" % ("   debug_type:", debug_type, debType))
+    print("%s [%s] [0x%x]" % ("   mem_factor:", mem_factor, memFactor))
+    print("======================================")
 
     if debControl:
         Core.DebParams.setModuleFlags(debModule)
@@ -624,10 +624,10 @@ def get_control(debug_control = "0",
         #_PcoControl.buffer().setMaxMemory(memFactor)
         #memFactor1 = _PcoControl.buffer().getMaxMemory()
 
-    print "================================================="
+    print("=================================================")
     #print "%s org[%d] req[%d] now[%d]" % ("   mem_factor:", memFactor0, memFactor, memFactor1)
-    print "%s org[%d]" % ("   mem_factor:", memFactor0)
-    print "================================================="
+    print("%s org[%d]" % ("   mem_factor:", memFactor0))
+    print("=================================================")
 
 
     return _PcoControl
@@ -646,6 +646,6 @@ def get_tango_specific_class_n_device():
 #   because the cam, interface destructors are NOT called (?)
 #==================================================================================
 def close_interface():
-    print "... close_interface()"
+    print("... close_interface()")
     _PcoInterface.reset(RESET_CLOSE_INTERFACE)
 

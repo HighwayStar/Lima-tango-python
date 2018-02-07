@@ -301,9 +301,9 @@ class RayonixHs(PyTango.Device_4Impl):
     @Core.DEB_MEMBER_FUNCT
     def getAttrStringValueList(self, attr_name):
         if attr_name in ['output1_id','output2_id']:
-            return self.__OutputSignalID.keys()
+            return list(self.__OutputSignalID.keys())
         elif attr_name in ['output1_signal_type', 'output2_signal_type']:
-            return self.__OutputSignalType.keys()
+            return list(self.__OutputSignalType.keys())
         else:
             return AttrHelper.get_attr_string_value_list(self, attr_name)
     
@@ -514,10 +514,10 @@ def get_control(**keys) :
     global _RayonixHsCamera
     global _RayonixHsInterface
     if _RayonixHsCamera is None:
-        print '\n\nStarting and configuring the RayonixHs camera ...'
+        print('\n\nStarting and configuring the RayonixHs camera ...')
         _RayonixHsCamera = RayonixHsAcq.Camera()
         _RayonixHsInterface = RayonixHsAcq.Interface(_RayonixHsCamera)
-        print '\n\nRayonixHs Camera (%s:%s) is started'%(_RayonixHsCamera.getDetectorType(),_RayonixHsCamera.getDetectorModel())
+        print('\n\nRayonixHs Camera (%s:%s) is started'%(_RayonixHsCamera.getDetectorType(),_RayonixHsCamera.getDetectorModel()))
     return Core.CtControl(_RayonixHsInterface)
 
     

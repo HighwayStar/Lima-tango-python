@@ -110,7 +110,7 @@ _ProsilicaCam = None
 _ProsilicaInterface = None
 
 def get_control(cam_ip_address = "0",**keys) :
-    print "cam_ip_address",cam_ip_address
+    print("cam_ip_address",cam_ip_address)
     global _ProsilicaCam
     global _ProsilicaInterface
     if _ProsilicaCam is None:
